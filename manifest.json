@@ -1,0 +1,11 @@
+{
+    "name": "Readability Redux",
+    "version": "1.0.1",
+    "description": "Readability for Chrome. Now fully customizable!",
+    "background_page": "redux/background.html",
+    "browser_action": { "default_icon": "icon.png" },
+    "icons": { "128": "icon.png" },
+    "permissions": [ "tabs", "http://*/*", "https://*/*" ],
+    "options_page": "redux/options.html",
+    "content_scripts": [ { "matches": ["http://*/*", "https://*/*"], "js": ["redux/contentscript.js"] } ]
+}

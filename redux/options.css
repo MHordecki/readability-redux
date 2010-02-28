@@ -1,0 +1,169 @@
+@charset "utf-8";
+/* CSS for options page of Readability Redux.
+ * HEAVILY inspired by original arc90 Readability homepage.
+ *
+ * Readability Redux by Michal Hordecki
+ */
+
+body {
+  font-family:helvetica, arial, sans-serif;
+  font-size:80%;
+  margin:10px;
+  margin-bottom: 100px;
+}
+
+#header {
+  padding-bottom:1.5em;
+  padding-top:1.5em;
+}
+
+#header h1 {
+  font-size: 156%;
+  display:inline;
+  padding-bottom:43px;
+  padding-left:75px;
+  padding-top:40px;
+  background:url(../icon.png) no-repeat;
+  background-size:67px;
+  background-position:1px 18px;
+}
+
+.section-header {
+  background:#ebeff9;
+  border-top:1px solid #b5c7de;
+  font-size:99%;
+  padding:3px 0 2px 5px;
+  font-weight:bold;
+  margin-bottom:1em;
+  margin-top:4em;
+}
+
+.section-header.first {
+  margin-top:1em;
+}
+
+#custom-domain {
+  width:300px;
+  margin-left:2px;
+}
+
+#footer {
+  margin-top:4em;
+}
+
+#keybox
+{
+    padding-top: 2px;
+    padding-bottom: 2px;
+    padding-left: 5px;
+    padding-right: 5px;
+    border: 1px solid gray;
+}
+
+#intro
+{
+    margin: 1em auto;
+}
+
+#container {
+    border: 1px solid gray;
+	margin-top: 10px;
+	margin-right:auto;
+	margin-left:auto;
+	width: 980px;
+	padding: 10px;
+	overflow: hidden;
+}
+
+a {
+	color: blue;
+	text-decoration: none;
+	font-weight: bolder;
+	margin-top: 10px;
+	border-bottom: 1px solid #fff;
+}
+
+#example {
+	display: block;
+	margin-left: 30px;
+	margin-top: 24px;
+	width: 888px;
+	height: 458px;
+	left: 30px;
+	padding: 1em 2em;
+	overflow: auto;
+}
+#articleContent {
+	text-align: left;
+	line-height: 1.4em;	
+	margin: 1em auto;
+}
+
+.size-small {
+	font-size: 12px;
+}
+.size-medium {
+	font-size: 18px;	
+}
+.size-large {
+	font-size: 26px;
+}
+.size-x-large {
+	font-size: 34px;
+}
+
+.style-novel {
+	font-family:"Palatino Linotype", "Book Antiqua", Palatino, serif;
+	background: #F4F3DB;
+	color: #222;
+}
+
+.style-ebook {
+	font-family:Arial, Helvetica, sans-serif;
+	background: #eee;
+	color: #333;
+}
+.style-ebook h1 {
+	font-family: "Arial Black", Gadget, sans-serif;
+	font-weight: normal;
+}
+
+.style-newspaper {
+	font-family:"Times New Roman", Times, serif;
+	background: #F7F7F7;
+	color: #222;
+}
+.style-newspaper h1 {
+	text-transform:capitalize;
+	font-family: Georgia, "Times New Roman", Times, serif;
+}
+
+.style-terminal {
+	font-family: "Lucida Console", Monaco, monospace;
+	background: #1D4E2C;
+	color: #C6FFC6;
+}
+
+.margin-x-wide {
+	width: 35%;
+}
+.margin-wide {
+	width: 55%;
+}
+.margin-medium {
+	width: 75%;
+}
+.margin-narrow {
+	width: 95%;
+}
+
+/* LOCK IN H1 SIZING */
+#articleContent h1 {
+	font-size: 1.2em !important;
+	display: block;
+	text-transform:capitalize;
+}
+#articleContent {
+	line-height: 1.4em;	
+}
+
