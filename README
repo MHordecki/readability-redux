@@ -22,6 +22,9 @@ Sources here are for development purposes.
 Changelog
 ----------
 
+1.1.1
+    + Fixed typo in options
+
 1.1
     + Support for Readability 1.5
     + Preview is now in an iframe
