@@ -65,7 +65,7 @@ body {
     margin: 1em auto;
 }
 
-#container {
+#example {
     border: 1px solid gray;
 	margin-top: 10px;
 	margin-right:auto;
@@ -83,7 +83,7 @@ a {
 	border-bottom: 1px solid #fff;
 }
 
-#example {
+#example iframe {
 	display: block;
 	margin-left: 30px;
 	margin-top: 24px;
@@ -92,11 +92,7 @@ a {
 	left: 30px;
 	padding: 1em 2em;
 	overflow: auto;
-}
-#articleContent {
-	text-align: left;
-	line-height: 1.4em;	
-	margin: 1em auto;
+    border: 0;
 }
 
 .size-small {

@@ -2,5 +2,9 @@
 <head>
 <script type="text/javascript" src="underscore-0.6.js"></script>
 <script type="text/javascript" src="background.js"></script>
+<script type="text/javascript">
+    chrome.extension.onRequest.addListener(on_request);
+    chrome.browserAction.onClicked.addListener(render);
+</script>
 </head>
 </html>

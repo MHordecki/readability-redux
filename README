@@ -1,0 +1,35 @@
+=================
+READABILITY REDUX
+=================
+
+Give your browsing an edge! Readability is a tool designed by Arc90.
+In their words:
+    "Readability is a simple tool that makes reading on the Web more
+     enjoyable by removing the cluter around what you're reading."
+
+Readability Redux is an extension for Google Chrome that brings you
+the support for Arc90's Readability. Check it out yourself.
+
+------------
+Installation
+------------
+
+Visit https://chrome.google.com/extensions/detail/jggheggpdocamneaacmfoipeehedigia
+
+Sources here are for development purposes.
+
+----------
+Changelog
+----------
+
+1.1
+    + Support for Readability 1.5
+    + Preview is now in an iframe
+
+1.0.1
+    + Code overhaul, options are now based on jQuery + Underscore
+    + Hosted on GitHub
+
+1.0
+    + Initial release
+

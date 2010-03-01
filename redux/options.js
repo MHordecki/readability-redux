@@ -42,10 +42,9 @@ var settings = {
             size: this.get_select('r_size'),
             margin: this.get_select('r_margin')
         };
-
-        chrome.extension.sendRequest({
-            type: 'set_settings',
-            settings: settings }, _.bind(this.mark_clean, this));
+        
+        chrome.extension.getBackgroundPage().set_settings(settings);
+        this.mark_clean();
     },
 
     load: function()
@@ -60,14 +59,37 @@ var settings = {
         this.mark_clean();
     },
 
+    /* This is a bit wicked, but doing plain simple 
+     * location = 'javascript:...' resulted in blank iframe.
+     * So, instead, child iframe sets the attribute below and calls preview() 
+     */
+    hello_from_child: function(preview_window)
+    {
+        this.preview_window = preview_window;
+
+        this.preview();
+    },
+
+    preview_window: null,
+
     preview: function()
     {
-        style = this.get_select('r_style');
-        size = this.get_select('r_size');
-        margin = this.get_select('r_margin');
+        var settings = {
+            style: this.get_select('r_style'),
+            size: this.get_select('r_size'),
+            margin: this.get_select('r_margin')
+        };
 
-        $('#example').attr('class', style);
-        $('#articleContent').attr('class', margin + ' ' + size);
+        var js = chrome.extension.getBackgroundPage().create_javascript(settings);
+
+        if(this.preview_window !== null)
+        {
+            //console.log($('#example iframe').get(0).contentWindow.location = js);
+            //console.log($('#example iframe').get(0).contentWindow['preview']);
+            this.preview_window.inject(js);
+            //$('#example iframe').get(0).contentWindow.preview(settings);
+        }
+        else console.log('Its null');
     }
 };
 
@@ -151,7 +173,10 @@ var keybox = {
 
 $(document).ready(function()
 {
-    settings.init();
-    //keybox.init();
+   $('#example iframe').ready(function()
+   {
+        settings.init();
+        //keybox.init();
+   });
 });
 
