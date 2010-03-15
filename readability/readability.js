@@ -33,7 +33,7 @@ var readability = {
      * Defined up here so we don't instantiate them repeatedly in loops.
      **/
     regexps: {
-        unlikelyCandidatesRe:   /combx|comment|disqus|foot|header|menu|meta|rss|shoutbox|sidebar|sponsor/i,
+        unlikelyCandidatesRe:   /combx|comment|disqus|foot|header|menu|rss|shoutbox|sidebar|sponsor/i,
         okMaybeItsACandidateRe: /and|article|body|column|main/i,
         positiveRe:             /article|body|content|entry|hentry|page|pagination|post|text/i,
         negativeRe:             /combx|comment|contact|foot|footer|footnote|link|media|meta|promo|related|scroll|shoutbox|sponsor|tags|widget/i,
@@ -167,50 +167,60 @@ var readability = {
         return articleTools;
     },
     
-	/**
-	 * Get the article title as an H1.
-	 *
-	 * @return void
-	 **/
-	getArticleTitle: function () {
-		var curTitle = document.title;
+    /**
+     * Get the article title as an H1.
+     *
+     * @return void
+     **/
+    getArticleTitle: function () {
+        var curTitle = "",
+            origTitle = "";
 
-		if(curTitle.match(/ [\|\-] /))
-		{
-			curTitle = document.title.replace(/(.*)[\|\-] .*/gi,'$1');
-			
-			if(curTitle.split(' ').length < 3) {
-				curTitle = document.title.replace(/[^\|\-]*[\|\-](.*)/gi,'$1');
-			}
-		}
-		else if(curTitle.indexOf(': ') !== -1)
-		{
-			curTitle = document.title.replace(/.*:(.*)/gi, '$1');
+        try {
+            curTitle = origTitle = document.title;
+            
+            if(typeof curTitle != "string") { /* If they had an element with id "title" in their HTML */
+                curTitle = origTitle = readability.getInnerText(document.getElementsByTagName('title')[0]);             
+            }
+        }
+        catch(e) {}
+        
+        if(curTitle.match(/ [\|\-] /))
+        {
+            curTitle = origTitle.replace(/(.*)[\|\-] .*/gi,'$1');
+            
+            if(curTitle.split(' ').length < 3) {
+                curTitle = origTitle.replace(/[^\|\-]*[\|\-](.*)/gi,'$1');
+            }
+        }
+        else if(curTitle.indexOf(': ') !== -1)
+        {
+            curTitle = origTitle.replace(/.*:(.*)/gi, '$1');
 
-			if(curTitle.split(' ').length < 3) {
-				curTitle = document.title.replace(/[^:]*[:](.*)/gi,'$1');
-			}
-		}
-		else if(curTitle.length > 150 || curTitle.length < 15)
-		{
-			var hOnes = document.getElementsByTagName('h1');
-			if(hOnes.length == 1)
-			{
-				curTitle = readability.getInnerText(hOnes[0]);
-			}
-		}
+            if(curTitle.split(' ').length < 3) {
+                curTitle = origTitle.replace(/[^:]*[:](.*)/gi,'$1');
+            }
+        }
+        else if(curTitle.length > 150 || curTitle.length < 15)
+        {
+            var hOnes = document.getElementsByTagName('h1');
+            if(hOnes.length == 1)
+            {
+                curTitle = readability.getInnerText(hOnes[0]);
+            }
+        }
 
-		curTitle = curTitle.replace( readability.regexps.trimRe, "" );
+        curTitle = curTitle.replace( readability.regexps.trimRe, "" );
 
-		if(curTitle.split(' ').length <= 4) {
-			curTitle = document.title;
-		}
-		
-		var articleTitle = document.createElement("H1");
-		articleTitle.innerHTML = curTitle;
-		
-		return articleTitle;
-	},
+        if(curTitle.split(' ').length <= 4) {
+            curTitle = origTitle;
+        }
+        
+        var articleTitle = document.createElement("H1");
+        articleTitle.innerHTML = curTitle;
+        
+        return articleTitle;
+    },
 
     /**
      * Get the footer with the readability mark etc.
@@ -220,12 +230,12 @@ var readability = {
     getArticleFooter: function () {
         var articleFooter = document.createElement("DIV");
 
-		/**
-		 * For research purposes, generate an img src that contains the chosen readstyle etc,
-		 * so we can generate aggregate stats and change styles based on them in the future
-		 **/
+        /**
+         * For research purposes, generate an img src that contains the chosen readstyle etc,
+         * so we can generate aggregate stats and change styles based on them in the future
+         **/
         // var statsQueryParams = "?readStyle=" + encodeURIComponent(readStyle) + "&readMargin=" + encodeURIComponent(readMargin) + "&readSize=" + encodeURIComponent(readSize);
-		/* TODO: attach this to an image */
+        /* TODO: attach this to an image */
 
         var twitterLink = document.createElement('a');
             twitterLink.setAttribute('href','http://lab.arc90.com/experiments/readability');
@@ -238,7 +248,7 @@ var readability = {
             "<div id='rdb-footer-left'>" +
                 "<a href='http://lab.arc90.com/experiments/readability' id='readability-logo'>Readability &mdash; </a>" +
                 "<a href='http://www.arc90.com/' id='arc90-logo'>An Arc90 Laboratory Experiment</a>" +
-				"<span id='readability-url'> &mdash; http://lab.arc90.com/experiments/readability</span>" +
+                "<span id='readability-url'> &mdash; http://lab.arc90.com/experiments/readability</span>" +
                 "<a href='http://www.twitter.com/arc90' class='footer-twitterLink'>Follow us on Twitter &raquo;</a>" +
             "</div>" +
             "<div id='rdb-footer-right'>" +
@@ -381,7 +391,7 @@ var readability = {
         **/
         rdbTKScript.setAttribute('type','text/javascript');
         rdbTKScript.setAttribute('src',"http://use.typekit.com/" + rdbTKCode + ".js");
-		rdbTKScript.setAttribute('charset','UTF-8');
+        rdbTKScript.setAttribute('charset','UTF-8');
         rdbHead.appendChild(rdbTKScript);
 
         /**
@@ -390,20 +400,20 @@ var readability = {
          * &
          * http://getsatisfaction.com/typekit/topics/support_a_pre_and_post_load_callback_function
         **/
-		var typekitLoader = function() {
-		    dbg("Looking for Typekit.");
-			if(typeof Typekit != "undefined") {
-				try {
-					dbg("Caught typekit");
-					Typekit.load();
-					clearInterval(window.typekitInterval);
-				} catch(e) {
-					dbg("Typekit error: " + e);
-				}
-			}
-		};
+        var typekitLoader = function() {
+            dbg("Looking for Typekit.");
+            if(typeof Typekit != "undefined") {
+                try {
+                    dbg("Caught typekit");
+                    Typekit.load();
+                    clearInterval(window.typekitInterval);
+                } catch(e) {
+                    dbg("Typekit error: " + e);
+                }
+            }
+        };
 
-		window.typekitInterval = window.setInterval(typekitLoader, 100);
+        window.typekitInterval = window.setInterval(typekitLoader, 100);
     },
 
     /**
@@ -521,7 +531,7 @@ var readability = {
          * TODO: Shouldn't this be a reverse traversal?
         **/
         var node = null;
-		var nodesToScore = [];
+        var nodesToScore = [];
         for(var nodeIndex = 0; (node = document.getElementsByTagName('*')[nodeIndex]); nodeIndex++)
         {
             /* Remove unlikely candidates */
@@ -538,9 +548,9 @@ var readability = {
                 }               
             }
 
-			if (node.tagName === "P" || node.tagName === "TD") {
-				nodesToScore[nodesToScore.length] = node;
-			}
+            if (node.tagName === "P" || node.tagName === "TD") {
+                nodesToScore[nodesToScore.length] = node;
+            }
 
             /* Turn all divs that don't have children block level elements into p's */
             if (node.tagName === "DIV") {
@@ -580,7 +590,7 @@ var readability = {
          *
          * A score is determined by things like number of commas, class names, etc. Maybe eventually link density.
         **/
-		var candidates = [];
+        var candidates = [];
         for (var pt=0; pt < nodesToScore.length; pt++) {
             var parentNode      = nodesToScore[pt].parentNode;
             var grandParentNode = parentNode.parentNode;
@@ -673,8 +683,14 @@ var readability = {
             {
                 append = true;
             }
-            
-            if(typeof siblingNode.readability != 'undefined' && siblingNode.readability.contentScore >= siblingScoreThreshold)
+
+            var contentBonus = 0;
+            /* Give a small bonus if sibling nodes and top candidates have the example same classname */
+            if(siblingNode.className == topCandidate.className && topCandidate.className != "") {
+                contentBonus += 10;
+            }
+
+            if(typeof siblingNode.readability != 'undefined' && (siblingNode.readability.contentScore+contentBonus) >= siblingScoreThreshold)
             {
                 append = true;
             }
@@ -698,31 +714,31 @@ var readability = {
             {
                 dbg("Appending node: " + siblingNode);
 
-				var nodeToAppend = null;
-				if(siblingNode.nodeName != "DIV" && siblingNode.nodeName != "P") {
-					/* We have a node that isn't a common block level element, like a form or td tag. Turn it into a div so it doesn't get filtered out later by accident. */
-					
+                var nodeToAppend = null;
+                if(siblingNode.nodeName != "DIV" && siblingNode.nodeName != "P") {
+                    /* We have a node that isn't a common block level element, like a form or td tag. Turn it into a div so it doesn't get filtered out later by accident. */
+                    
                     dbg("Altering siblingNode of " + siblingNode.nodeName + ' to div.');
                     nodeToAppend = document.createElement('div');
                     try {
-						nodeToAppend.id = siblingNode.id;
+                        nodeToAppend.id = siblingNode.id;
                         nodeToAppend.innerHTML = siblingNode.innerHTML;
                     }
                     catch(e)
                     {
                         dbg("Could not alter siblingNode to div, probably an IE restriction, reverting back to original.");
-						nodeToAppend = siblingNode;
-		                s--;
-		                sl--;
+                        nodeToAppend = siblingNode;
+                        s--;
+                        sl--;
                     }
-				} else {
-					nodeToAppend = siblingNode;
-	                s--;
-	                sl--;
-				}
-				
-				/* To ensure a node does not interfere with readability styles, remove its classnames */
-				nodeToAppend.className = "";
+                } else {
+                    nodeToAppend = siblingNode;
+                    s--;
+                    sl--;
+                }
+                
+                /* To ensure a node does not interfere with readability styles, remove its classnames */
+                nodeToAppend.className = "";
 
                 /* Append sibling and subtract from our list because it removes the node when you append to another node */
                 articleContent.appendChild(nodeToAppend);
@@ -1064,3 +1080,4 @@ var readability = {
 };
 
 readability.init();
+

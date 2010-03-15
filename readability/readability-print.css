@@ -1,53 +1,54 @@
 body, #readOverlay {
-	background-color: white !important;
+    background-color: white !important;
 }
 
 embed, object {
-	display: none !important;
+    display: none !important;
 }
 
 #readInner {
-	width: 100% !important;
-/*	font-size: 12pt; */
+    width: 100% !important;
+/*  font-size: 12pt; */
 }
 #readTools {
-	display: none !important;
+    display: none !important;
 }
 
 #readFooter {
-	font-size: 10pt;
+    font-size: 10pt;
 }
 
 #readability-url {
-	display: inline !important;
+    display: inline !important;
 }
 
 #readability-footer-logo {
-	color: #333 !important;
-	font-family: "Adobe Caslon Pro", "Hoefler Text", Georgia, Garamond, serif;
-	width: auto;
-	margin-top: 15px;
-	text-align: left;
-	text-indent: 0 !important;
+    color: #333 !important;
+    font-family: "Adobe Caslon Pro", "Hoefler Text", Georgia, Garamond, serif;
+    width: auto;
+    margin-top: 15px;
+    text-align: left;
+    text-indent: 0 !important;
 }
 
 #readability-footer-logo a {
-	display: inline !important;
-	float: none !important;
-	width: auto !important;
-	text-indent: 0 !important;
-	border-bottom-width: 0 !important;
+    display: inline !important;
+    float: none !important;
+    width: auto !important;
+    text-indent: 0 !important;
+    border-bottom-width: 0 !important;
 }
 
 span.version {
-	display: none;
+    display: none;
 }
 
 a {
-	color: #333 !important;
-	border-bottom: 1px solid #CCC !important;
+    color: #333 !important;
+    border-bottom: 1px solid #CCC !important;
 }
 
 div.footer-right {
-	display: none;
+    display: none;
 }
+

@@ -22,7 +22,10 @@ Sources here are for development purposes.
 Changelog
 ----------
 
-1.1.1
+1.1.2 (2010.03.15)
+    + Support for Readability 1.5.0 r137
+
+1.1.1 (2010.03.01)
     + Fixed typo in options
 
 1.1
