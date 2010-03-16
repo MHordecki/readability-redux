@@ -40,7 +40,8 @@ var settings = {
         var settings = {
             style: this.get_select('r_style'),
             size: this.get_select('r_size'),
-            margin: this.get_select('r_margin')
+            margin: this.get_select('r_margin'),
+            experimental: $('#enable_experimental').attr('checked')
         };
         
         chrome.extension.getBackgroundPage().set_settings(settings);
@@ -54,6 +55,7 @@ var settings = {
         this.set_select('r_style', settings['style']);
         this.set_select('r_size', settings['size']);
         this.set_select('r_margin', settings['margin']);
+        $('#enable_experimental').attr('checked', settings['experimental'])
 
         this.preview();
         this.mark_clean();

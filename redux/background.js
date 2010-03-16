@@ -3,7 +3,14 @@ function create_javascript(settings)
 {
 
     //LOCAL LINKS
-    var js_url = chrome.extension.getURL('readability/readability.js');
+    if(settings.experimental)
+    {
+        var js_url = chrome.extension.getURL('readability/readability-x.js');
+    } else
+    {
+        var js_url = chrome.extension.getURL('readability/readability.js');
+    }
+
     var css_url = chrome.extension.getURL('readability/readability.css');
     var print_url = chrome.extension.getURL('readability/readability-print.css');
 
@@ -45,7 +52,8 @@ function get_settings()
     var settings = {
         style: localStorage['style'],
         size: localStorage['size'],
-        margin: localStorage['margin']
+        margin: localStorage['margin'],
+        experimental: localStorage['experimental']
     };
 
     var defaults = {
