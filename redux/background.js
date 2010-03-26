@@ -53,13 +53,27 @@ function get_settings()
         style: localStorage['style'],
         size: localStorage['size'],
         margin: localStorage['margin'],
-        experimental: localStorage['experimental']
+        experimental: localStorage['experimental'],
+        keys_enabled: localStorage['keys_enabled']
     };
+
+    try
+    {
+        settings['keys'] = JSON.parse(localStorage['keys']);
+    } catch(e)
+    {
+        settings['keys'] = [];
+    }
+
+    if(!_.isArray(settings['keys']))
+        settings['keys'] = [];
 
     var defaults = {
         style: 'style-newspaper',
         size: 'size-large',
-        margin: 'margin-wide'
+        margin: 'margin-wide',
+        keys_enabled: false,
+        keys: []
     };
 
     _.each(defaults, function(val, key)
@@ -75,6 +89,9 @@ function get_settings()
 
 function set_settings(settings)
 {
+    if(_.include(_.keys(settings), 'keys'))
+        settings['keys'] = JSON.stringify(settings['keys']);
+
     _.extend(localStorage, settings);
 }
 
