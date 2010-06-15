@@ -41,8 +41,9 @@ var settings = {
             style: this.get_select('r_style'),
             size: this.get_select('r_size'),
             margin: this.get_select('r_margin'),
-            experimental: $('#enable_experimental').attr('checked'),
-            keys_enabled: $('#enable_keybox').attr('checked'),
+            enable_links: $('#enable_links').attr('checked'),
+            enable_experimental: $('#enable_experimental').attr('checked'),
+            enable_keys: $('#enable_keys').attr('checked'),
             keys: keybox.keys
         };
 
@@ -59,14 +60,15 @@ var settings = {
         this.set_select('r_style', settings['style']);
         this.set_select('r_size', settings['size']);
         this.set_select('r_margin', settings['margin']);
+        $('#enable_links').attr('checked', settings['enable_links']);
         
         keybox.keys = settings['keys'];
-        if(settings['keys_enabled'])
+        if(settings['enable_keys'])
             keybox.enable();
         else
             keybox.disable();
 
-        $('#enable_experimental').attr('checked', settings['experimental'])
+          $('#enable_experimental').attr('checked', settings['enable_experimental']);
 
         keybox.update();
         this.preview();
@@ -115,30 +117,32 @@ var keybox = {
 
     init: function()
     {
-        $('#keybox').keydown(_.bind(this.keydown, this));
-        $('#keybox').keyup(_.bind(this.keyup, this));
-        $('#keybox').focus(_.bind(this.focus, this));
-        $('#keybox').blur(_.bind(this.blur, this));
-        $('#enable_keybox').change(_.bind(this.checkbox, this));
+        $('#keys').keydown(_.bind(this.keydown, this));
+        $('#keys').keyup(_.bind(this.keyup, this));
+        $('#keys').focus(_.bind(this.focus, this));
+        $('#keys').blur(_.bind(this.blur, this));
+        $('#enable_keys').change(_.bind(this.checkbox, this));
     },
 
     enable: function()
     {
-        $('#enable_keybox').attr('checked', 'checked');
-        $('#keybox').css('background-color', '');
+        $('#enable_keys').attr('checked', 'checked');
+        $('#keys').css('background-color', '');
+        $('#keys').css('color', '');
         this.enabled = 1;
     },
 
     disable: function()
     {
-        $('#enable_keybox').attr('checked', '');
-        $('#keybox').css('background-color', 'silver');
+        $('#enable_keys').attr('checked', '');
+        $('#keys').css('background-color', 'silver');
+        $('#keys').css('color', 'gray');
         this.enabled = 0;
     },
 
     checkbox: function()
     {
-        if($('#enable_keybox').attr('checked'))
+        if($('#enable_keys').attr('checked'))
             this.enable();
         else
             this.disable();
@@ -203,7 +207,7 @@ var keybox = {
                 value.push("Alt");
         }
 
-        $("#keybox").attr('value', value.join(' + '));
+        $("#keys").attr('value', value.join(' + '));
     },
 
     focus: function()
@@ -211,7 +215,7 @@ var keybox = {
         if(!this.enabled)
             return;
 
-        $('#keybox').css('background-color', '#ebeff9');
+        $('#keys').css('background-color', '#ebeff9');
     },
 
     blur: function()
@@ -219,7 +223,8 @@ var keybox = {
         if(!this.enabled)
             return;
 
-        $('#keybox').css('background-color', '');
+        $('#keys').css('background-color', '');
+        $('#keys').css('color', '');
     }
 };
 

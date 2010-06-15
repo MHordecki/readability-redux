@@ -22,6 +22,10 @@ Sources here are for development purposes.
 Changelog
 ----------
 
+1.2 (2010.06.05)
+    + Support for Readability 1.6 r147 (links-to-footnotes conversion)
+    + Keyboard shortcuts, finally!
+
 1.1.2 (2010.03.15)
     + Support for Readability 1.5.0 r137
 

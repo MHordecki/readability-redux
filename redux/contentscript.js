@@ -39,7 +39,8 @@ function contains(a, el)
 }
 
 var listener = {
-    goal: [16, 18, 77],
+    enabled: false,
+    goal: [17, 88],
     current_state: [],
 
     callback: function()
@@ -49,6 +50,8 @@ var listener = {
 
     onkeydown: function(e)
     {
+        if(!this.enabled) return false;
+
         if(!((e.which >= 65 && e.which <= 90) || e.which == 16 || e.which == 17 || e.which == 18))
             return false;
 
@@ -71,6 +74,8 @@ var listener = {
 
     onkeyup: function(e)
     {
+        if(!this.enabled) return false;
+
         if(!((e.which >= 65 && e.which <= 90) || e.which == 16 || e.which == 17 || e.which == 18))
             return false;
 
@@ -84,9 +89,26 @@ var listener = {
 
 function prepare_callbacks()
 {
-    //document.body.addEventListener('keydown', function(e) {listener.onkeydown(e);}, false);
-    //document.body.addEventListener('keyup', function(e) {listener.onkeyup(e);}, false);
+    document.body.addEventListener('keydown', function(e) {listener.onkeydown(e);}, false);
+    document.body.addEventListener('keyup', function(e) {listener.onkeyup(e);}, false);
 }
 
+
+function refresh_settings(settings)
+{
+    listener.enabled = settings["enable_keys"];
+    listener.goal = settings["keys"];
+}
+
+/*
+chrome.extension.onRequest.addListener(function(data, sender, callback)
+{
+    if(data['type'] === "settings_changed")
+    {
+        refresh_settings(data['settings']);  
+    }  
+});
+*/
+
+chrome.extension.sendRequest({'type': 'get_settings'}, function(r) { refresh_settings(r); });
 prepare_callbacks();
-//document.addEventListener('DOMContentLoaded', onload, false);
