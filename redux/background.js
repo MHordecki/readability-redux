@@ -1,7 +1,6 @@
 
-function create_javascript(settings)
+function createJavascript(settings)
 {
-
     if(settings['remote']) 
     {
         console.log('Using remote Readability.');
@@ -25,30 +24,20 @@ function create_javascript(settings)
       var print_url = chrome.extension.getURL('readability/readability-print.css');
     }
 
-    var code = "javascript:(function(){readConvertLinksToFootnotes=" + settings['enable_links'] + ";readStyle='" + settings['style'] + "';readSize='" + settings['size'] + "';readMargin='" + settings['margin'] + "';_readability_script=document.createElement('SCRIPT');_readability_script.type='text/javascript';_readability_script.src='" + js_url + "';document.getElementsByTagName('head')[0].appendChild(_readability_script);_readability_css=document.createElement('LINK');_readability_css.rel='stylesheet';_readability_css.href='" + css_url + "';_readability_css.type='text/css';_readability_css.media='screen';document.getElementsByTagName('head')[0].appendChild(_readability_css);_readability_print_css=document.createElement('LINK');_readability_print_css.rel='stylesheet';_readability_print_css.href='" + print_url + "';_readability_print_css.media='print';_readability_print_css.type='text/css';document.getElementsByTagName('head')[0].appendChild(_readability_print_css);})();";
+    var code = "(function(){readConvertLinksToFootnotes=" + settings['enable_links'] + ";readStyle='" + settings['style'] + "';readSize='" + settings['size'] + "';readMargin='" + settings['margin'] + "';_readability_script=document.createElement('SCRIPT');_readability_script.type='text/javascript';_readability_script.src='" + js_url + "';document.getElementsByTagName('head')[0].appendChild(_readability_script);_readability_css=document.createElement('LINK');_readability_css.rel='stylesheet';_readability_css.href='" + css_url + "';_readability_css.type='text/css';_readability_css.media='screen';document.getElementsByTagName('head')[0].appendChild(_readability_css);_readability_print_css=document.createElement('LINK');_readability_print_css.rel='stylesheet';_readability_print_css.href='" + print_url + "';_readability_print_css.media='print';_readability_print_css.type='text/css';document.getElementsByTagName('head')[0].appendChild(_readability_print_css);})();";
 
     return code;
 }
 
-function render(tab)
+function render(tab_id)
 {
-    var settings = get_settings();
+    var settings = getSettings();
     console.log(settings);
 
-    chrome.tabs.update(tab.id, { url: create_javascript(settings) });
+    chrome.tabs.sendRequest(tab_id, {'type': 'render'});
 }
 
-function on_request(request, sender, sendResponse)
-{
-    if(request.type == 'render')
-    {
-        render(sender.tab);
-        sendResponse({});
-    } else if(request.type == 'get_settings')
-      sendResponse(get_settings());
-}
-                                                                
-function get_settings()
+function getSettings()
 {
     function parse(x)
     {
@@ -95,7 +84,7 @@ function get_settings()
     return settings;
 }
 
-function set_settings(settings)
+function setSettings(settings)
 {
     if(_.include(_.keys(settings), 'enable_links'))
         settings['enable_links'] = JSON.stringify(!!settings['enable_links']);
@@ -109,25 +98,22 @@ function set_settings(settings)
     if(_.include(_.keys(settings), 'keys'))
         settings['keys'] = JSON.stringify(settings['keys']);
 
-    console.log('set_settings', settings);
+    console.log('setSettings', settings);
 
     _.extend(localStorage, settings);
 
-    //propagate_request({'type': 'settings_changed', 'settings': get_settings()});
 }
 
-/*function propagate_request(data)
+chrome.extension.onRequest.addListener(function(data, sender, callback)
 {
-  chrome.windows.getAll({populate: true}, function(windows) 
-  {
-    _.each(windows, function(window)
+    if(data['type'] == 'javascript')
     {
-      _.each(window.tabs, function(tab)
-      {
-        chrome.extension.sendRequest(tab.id, data);
-      });
-    });
-     
-  });
-}*/
+        callback(createJavascript(getSettings()));
+    }
+});
+
+chrome.browserAction.onClicked.addListener(function(tab)
+{
+    render(tab.id);
+});
 

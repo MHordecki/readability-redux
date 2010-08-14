@@ -43,11 +43,6 @@ var listener = {
     goal: [17, 88],
     current_state: [],
 
-    callback: function()
-    {
-        chrome.extension.sendRequest({'type': 'render'}, function(r) {});
-    },
-
     onkeydown: function(e)
     {
         if(!this.enabled) return false;
@@ -64,7 +59,7 @@ var listener = {
         if(cmp_arrays(this.goal, this.current_state))
         {
             this.current_state = [];
-            this.callback();
+            render();
         }
 
         //console.log('keydown ' + e.which + ' => ' + this.current_state.toString());
@@ -87,28 +82,33 @@ var listener = {
 
 };
 
-function prepare_callbacks()
-{
-    document.body.addEventListener('keydown', function(e) {listener.onkeydown(e);}, false);
-    document.body.addEventListener('keyup', function(e) {listener.onkeyup(e);}, false);
-}
-
-
-function refresh_settings(settings)
+function setSettings(settings)
 {
     listener.enabled = settings["enable_keys"];
     listener.goal = settings["keys"];
 }
 
-/*
+function render()
+{
+    chrome.extension.sendRequest({'type': 'javascript'}, function(response)
+    {
+        var script = document.createElement('script');
+        script.appendChild(document.createTextNode(response));
+        console.log(document.getElementsByTagName('head'));
+        document.getElementsByTagName('head')[0].appendChild(script);
+    });
+}
+
 chrome.extension.onRequest.addListener(function(data, sender, callback)
 {
-    if(data['type'] === "settings_changed")
+    if(data['type'] === "render")
     {
-        refresh_settings(data['settings']);  
-    }  
+        render();
+    }
 });
-*/
 
-chrome.extension.sendRequest({'type': 'get_settings'}, function(r) { refresh_settings(r); });
-prepare_callbacks();
+chrome.extension.sendRequest({'type': 'get_settings'}, function(r) { setSettings(r); });
+
+document.body.addEventListener('keydown', function(e) {listener.onkeydown(e);}, false);
+document.body.addEventListener('keyup', function(e) {listener.onkeyup(e);}, false);
+

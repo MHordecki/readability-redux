@@ -7,5 +7,5 @@
     "icons": { "128": "icon.png" },
     "permissions": [ "tabs", "http://*/*", "https://*/*" ],
     "options_page": "redux/options.html",
-    "content_scripts": [ { "matches": ["http://*/*", "https://*/*"], "js": ["redux/contentscript.js"] } ]
+    "content_scripts": [ { "matches": ["<all_urls>"], "js": ["redux/contentscript.js"] } ]
 }
