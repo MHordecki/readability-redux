@@ -117,3 +117,12 @@ chrome.browserAction.onClicked.addListener(function(tab)
     render(tab.id);
 });
 
+chrome.contextMenus.create({
+    'title': 'Readability',
+    'contexts': ['page', 'selection'],
+    'onclick': function(selection, tab)
+    {
+        render(tab.id);
+    }
+})
+
