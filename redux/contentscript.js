@@ -78,15 +78,17 @@ var listener = {
         //console.log('keyup ' + e.which + ' => ' + this.current_state.toString());
 
         return false;
+    },
+
+    setSettings: function(settings)
+    {
+        this.enabled = settings["enable_keys"];
+        this.goal = settings["keys"];
+        this.current_state = [];
+        console.log(settings);
     }
 
 };
-
-function setSettings(settings)
-{
-    listener.enabled = settings["enable_keys"];
-    listener.goal = settings["keys"];
-}
 
 function render()
 {
@@ -104,10 +106,14 @@ chrome.extension.onRequest.addListener(function(data, sender, callback)
     if(data['type'] === "render")
     {
         render();
+    } else
+    if(data['type'] == 'newSettings')
+    {
+        listener.setSettings(data['settings']);
     }
 });
 
-chrome.extension.sendRequest({'type': 'get_settings'}, function(r) { setSettings(r); });
+chrome.extension.sendRequest({'type': 'getSettings'}, function(r) { listener.setSettings(r); });
 
 document.body.addEventListener('keydown', function(e) {listener.onkeydown(e);}, false);
 document.body.addEventListener('keyup', function(e) {listener.onkeyup(e);}, false);

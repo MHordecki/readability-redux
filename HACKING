@@ -1,0 +1,74 @@
+SOME TIPS ON HOW TO IMPROVE READABILITY
+=======================================
+
+
+IMPORTANT
+---------
+
+Readability Redux is just a wrapper around Readability. If you want to
+improve css styling, add new fonts or whatnot, consider contributing
+to the original Readability project[1].
+
+
+Layout
+------
+
+Okay, having that sorted out, let's look how RR is organized:
+
+  / - some boilerplate files, like the one you're reading right now
+  /icon*.png - icon files. Accepted dimensions are 16x16, 19x19, 48x48 and 128x128.
+  /readability - "stock" Readability files
+    /readability.js - original Readability script
+    /readability-x.js - Readability that works with selections ("experimental")
+  /redux - extension-specific files
+    /background.js - background page
+    /contentscript.js - content script (launched with every tab)
+    /options.* - options page
+    /example.html - example text shown in the options page
+
+Innards
+-------
+
+There are three extensions scripts: background.js, options.js and contentscript.js.
+All communication happens through message passing.
+
+Note that background.js accepts messages sent by another extensions.
+
+Here are the interactions between those 3 scripts:
+
+  + background.js - main pivot of the extension
+    Messages accepted:
+      + {"type": "javascript"} - returns a javascript code that readabilizes a document.
+                                 You can pass an additional parameter "settings" with
+                                 which you can customize the script. For the accepted
+                                 format, see what getSettings spews out.
+      + {"type": "getSettings"} - gets settings object. (see source for more)
+      + {"type": "setSettings"} - analogous
+      + {"type": "render", "tab_id": 123} - launches Redability in the given tab.
+                                            If tab_id is ommitted, sender.tab.id
+                                            is assumed.
+
+    Actions performed:
+      + When browser button or context menu item is clicked, sends "render" message
+        to the proper context script.
+      + When settings are changed (through setSettings) sends "newSettings" message
+        to all its content scripts.
+
+  + options.js
+    Actions performed:
+      + Communicates with the background.js through "getSettings"/"setSettings".
+
+  + contentscript.js
+    Messages accepted:
+      + {"type": "render"} - launches Readability in the tab.
+      + {"type": "newSettings"} - updates internal settings storage used for
+                                  key shortcuts.
+    
+    Actions performed:
+      + When correct key shortcut is pressed, Readablity is launched.
+      + When Readability is launched, uses "javascript" message to get the
+        code from background.js
+        
+
+  [1]: http://code.google.com/p/arc90labs-readability/
+

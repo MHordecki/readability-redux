@@ -51,12 +51,12 @@ function getSettings()
     }
 
     var settings = {
-        style: localStorage['style'],
-        size: localStorage['size'],
-        margin: localStorage['margin'],
-        enable_links: parse(localStorage['enable_links']),
-        enable_experimental: parse(localStorage['enable_experimental']),
-        enable_keys: parse(localStorage['enable_keys']),
+        style: localStorage['style'].toString(),
+        size: localStorage['size'].toString(),
+        margin: localStorage['margin'].toString(),
+        enable_links: !!parse(localStorage['enable_links']),
+        enable_experimental: !!parse(localStorage['enable_experimental']),
+        enable_keys: !!parse(localStorage['enable_keys']),
         keys: parse(localStorage['keys'])
     };
 
@@ -73,19 +73,22 @@ function getSettings()
         keys: []
     };
 
-    _.each(defaults, function(val, key)
-        {
-            if(!_.include(_.keys(settings), key) || settings[key] === undefined)
-            {
-                settings[key] = val;
-            }
-        });
-
-    return settings;
+    return _.extend(defaults, settings);
 }
 
 function setSettings(settings)
 {
+    var keys = _.keys(settings);
+
+    if(_.include(keys, 'style'))
+        settings['style'] = settings['style'].toString();
+
+    if(_.include(keys, 'size'))
+        settings['size'] = settings['size'].toString();
+
+    if(_.include(keys, 'margin'))
+        settings['margin'] = settings['margin'].toString();
+
     if(_.include(_.keys(settings), 'enable_links'))
         settings['enable_links'] = JSON.stringify(!!settings['enable_links']);
 
@@ -102,15 +105,45 @@ function setSettings(settings)
 
     _.extend(localStorage, settings);
 
+    chrome.windows.getAll({'populate': true}, function(windows)
+    {
+        _.each(windows, function(window)
+        {
+            _.each(window.tabs, function(tab)
+            {
+                chrome.tabs.sendRequest(tab.id, {'type': 'newSettings', 'settings': getSettings()});
+            });
+        });
+    });
 }
 
-chrome.extension.onRequest.addListener(function(data, sender, callback)
+function requestHandler(data, sender, callback)
 {
     if(data['type'] == 'javascript')
     {
-        callback(createJavascript(getSettings()));
+        if(_.include(_.keys(data), 'settings'))
+            callback(createJavascript(data['settings']));
+        else
+            callback(createJavascript(getSettings()));
     }
-});
+    if(data['type'] == 'setSettings')
+    {
+        setSettings(data['settings']);
+        callback();
+    }
+    if(data['type'] == 'getSettings')
+    {
+        callback(getSettings());
+    }
+    if(data['type'] == 'render')
+    {
+        render(data['tab_id']);
+        callback();
+    }
+}
+
+chrome.extension.onRequest.addListener(requestHandler);
+chrome.extension.onRequestExternal.addListener(requestHandler);
 
 chrome.browserAction.onClicked.addListener(function(tab)
 {
@@ -124,5 +157,5 @@ chrome.contextMenus.create({
     {
         render(tab.id);
     }
-})
+});
 

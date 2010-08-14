@@ -3,8 +3,8 @@ var settings = {
 
     init: function()
     {
-        $('select').change(_.bind(function() { this.preview(); this.mark_dirty(); }, this)); 
-        $('input').change(_.bind(this.mark_dirty, this)); 
+        $('select').change(_.bind(function() { this.preview(); this.markDirty(); }, this)); 
+        $('input').change(_.bind(this.markDirty, this)); 
 
         $('#cancel').click(_.bind(this.load, this));
         $('#save').click(_.bind(this.save, this));
@@ -12,12 +12,12 @@ var settings = {
         this.load();
     },
 
-    get_select: function(name)
+    getSelect: function(name)
     {
         return $('#' + name).val();
     },
 
-    set_select: function(name, value)
+    setSelect: function(name, value)
     {
         if($('#' + name + ' option[value=' + value + ']')
            .attr('selected', 'selected')
@@ -25,12 +25,12 @@ var settings = {
            $('#' + name + ' option:first-child').attr('selected', 'selected');
     },
 
-    mark_dirty: function()
+    markDirty: function()
     {
         $('#save').attr('disabled', '');
     },
 
-    mark_clean: function()
+    markClean: function()
     {
         $('#save').attr('disabled', 'disabled');
     },
@@ -38,9 +38,9 @@ var settings = {
     save: function()
     {
         var settings = {
-            style: this.get_select('r_style'),
-            size: this.get_select('r_size'),
-            margin: this.get_select('r_margin'),
+            style: this.getSelect('r_style'),
+            size: this.getSelect('r_size'),
+            margin: this.getSelect('r_margin'),
             enable_links: $('#enable_links').attr('checked'),
             enable_experimental: $('#enable_experimental').attr('checked'),
             enable_keys: $('#enable_keys').attr('checked'),
@@ -49,40 +49,40 @@ var settings = {
 
         console.log(settings);
         
-        chrome.extension.getBackgroundPage().set_settings(settings);
-        this.mark_clean();
+        chrome.extension.sendRequest(
+            {'type': 'setSettings', 'settings': settings},
+            _.bind(this.markClean, this));
     },
 
     load: function()
     {
-        var settings = chrome.extension.getBackgroundPage().get_settings();
+        chrome.extension.sendRequest({'type': 'getSettings'}, _.bind(function(settings)
+        {
+            this.setSelect('r_style', settings['style']);
+            this.setSelect('r_size', settings['size']);
+            this.setSelect('r_margin', settings['margin']);
+            $('#enable_links').attr('checked', settings['enable_links']);
+            
+            keybox.keys = settings['keys'];
+            if(settings['enable_keys'])
+                keybox.enable();
+            else
+                keybox.disable();
 
-        this.set_select('r_style', settings['style']);
-        this.set_select('r_size', settings['size']);
-        this.set_select('r_margin', settings['margin']);
-        $('#enable_links').attr('checked', settings['enable_links']);
-        
-        keybox.keys = settings['keys'];
-        if(settings['enable_keys'])
-            keybox.enable();
-        else
-            keybox.disable();
+              $('#enable_experimental').attr('checked', settings['enable_experimental']);
 
-          $('#enable_experimental').attr('checked', settings['enable_experimental']);
-
-        keybox.update();
-        this.preview();
-        this.mark_clean();
+            keybox.update();
+            this.preview()
+            this.markClean();
+        }, this));
     },
 
     /* This is a bit wicked, but doing plain simple 
      * location = 'javascript:...' resulted in blank iframe.
-     * So, instead, child iframe sets the attribute below and calls preview() 
      */
     hello_from_child: function(preview_window)
     {
         this.preview_window = preview_window;
-
         this.preview();
     },
 
@@ -91,21 +91,19 @@ var settings = {
     preview: function()
     {
         var settings = {
-            style: this.get_select('r_style'),
-            size: this.get_select('r_size'),
-            margin: this.get_select('r_margin')
+            style: this.getSelect('r_style'),
+            size: this.getSelect('r_size'),
+            margin: this.getSelect('r_margin')
         };
 
-        var js = chrome.extension.getBackgroundPage().create_javascript(settings);
-
-        if(this.preview_window !== null)
+        chrome.extension.sendRequest({'type': 'javascript', 'settings': settings}, _.bind(function(js)
         {
-            //console.log($('#example iframe').get(0).contentWindow.location = js);
-            //console.log($('#example iframe').get(0).contentWindow['preview']);
-            this.preview_window.inject(js);
-            //$('#example iframe').get(0).contentWindow.preview(settings);
-        }
-        else console.log('Its null');
+            if(this.preview_window !== null)
+            {
+                this.preview_window.inject(js);
+            }
+            else console.log('ZOMG! Preview window IS NULL!');
+        }, this));
     }
 };
 
@@ -169,7 +167,7 @@ var keybox = {
         this.keys.push(e.which);
         this.pressed++;
 
-        settings.mark_dirty();
+        settings.markDirty();
         this.update();
     },
 
@@ -230,10 +228,10 @@ var keybox = {
 
 $(document).ready(function()
 {
-   $('#example iframe').ready(function()
-   {
+    $('#example iframe').ready(function()
+    {
         settings.init();
         keybox.init();
-   });
+    });
 });
 
