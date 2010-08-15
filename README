@@ -22,6 +22,10 @@ Sources here are for development purposes.
 Changelog
 ----------
 
+1.3.1 (2010.08.15)
+    + As context menu functionality isn't supported in stable Google Chrome, I had to remove it.
+    + Minor bugfix.
+
 1.3 (2010.08.14)
     + Now works with local files (if it isn't working, check out chrome://extensions and set "Allow access to file URLs")
     + Support for context menus (sadly they don't work with local files, and the hack I've used with the browser action is moot here)

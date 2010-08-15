@@ -51,9 +51,9 @@ function getSettings()
     }
 
     var settings = {
-        style: localStorage['style'].toString(),
-        size: localStorage['size'].toString(),
-        margin: localStorage['margin'].toString(),
+        style: localStorage['style'],
+        size: localStorage['size'],
+        margin: localStorage['margin'],
         enable_links: !!parse(localStorage['enable_links']),
         enable_experimental: !!parse(localStorage['enable_experimental']),
         enable_keys: !!parse(localStorage['enable_keys']),
@@ -81,13 +81,13 @@ function setSettings(settings)
     var keys = _.keys(settings);
 
     if(_.include(keys, 'style'))
-        settings['style'] = settings['style'].toString();
+        settings['style'] = settings['style']
 
     if(_.include(keys, 'size'))
-        settings['size'] = settings['size'].toString();
+        settings['size'] = settings['size']
 
     if(_.include(keys, 'margin'))
-        settings['margin'] = settings['margin'].toString();
+        settings['margin'] = settings['margin']
 
     if(_.include(_.keys(settings), 'enable_links'))
         settings['enable_links'] = JSON.stringify(!!settings['enable_links']);
@@ -150,12 +150,12 @@ chrome.browserAction.onClicked.addListener(function(tab)
     render(tab.id);
 });
 
-chrome.contextMenus.create({
+/*chrome.contextMenus.create({
     'title': 'Readability',
     'contexts': ['page', 'selection'],
     'onclick': function(selection, tab)
     {
         render(tab.id);
     }
-});
+});*/
 
