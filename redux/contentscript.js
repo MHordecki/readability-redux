@@ -85,7 +85,7 @@ var listener = {
         this.enabled = settings["enable_keys"];
         this.goal = settings["keys"];
         this.current_state = [];
-        console.log(settings);
+        //console.log(settings);
     }
 
 };
@@ -96,7 +96,8 @@ function render()
     {
         var script = document.createElement('script');
         script.appendChild(document.createTextNode(response));
-        console.log(document.getElementsByTagName('head'));
+        //console.log(document.getElementsByTagName('head'));
+        
         document.getElementsByTagName('head')[0].appendChild(script);
     });
 }
