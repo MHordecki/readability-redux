@@ -45,8 +45,8 @@
 </p>
 
 <p>
-<input type="checkbox" id="enable_links" />
-<label for="enable_links">Convert links to footnotes(<a href="http://blog.arc90.com/2010/06/03/readability-updated-an-end-to-the-yank-of-the-hyperlink/">more</a>).</label>
+<input type="checkbox" id="enable_footnotes" />
+<label for="enable_footnotes">Convert links to footnotes (<a target="_new" href="http://blog.arc90.com/2010/06/03/readability-updated-an-end-to-the-yank-of-the-hyperlink/">more</a>).</label>
 </p>
 
 <p>
@@ -57,8 +57,14 @@
 
 <p>
 <input type="checkbox" id="enable_experimental" name="enable_experimental" />
-<label for="enable_experimental">Apply Readability only to selected fragment (experimental).</label>
+<label for="enable_experimental">Apply Readability only to selected fragment (experimental; forces use of bundled Readability).</label>
 </p>
+
+<p>
+<input type="checkbox" id="remote" name="remote" />
+<label for="remote">Use remote Readability hosted by arc90 (requires additional network traffic; otherwise, use bundled version 1.7.1)</label>
+</p>
+
 
 <p>
 <button id="save">Save</button>

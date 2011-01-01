@@ -1,109 +1,73 @@
+var default_settings = {
+	style: 'style-newspaper',
+	size: 'size-large',
+	margin: 'margin-wide',
+	enable_footnotes: false,
+	enable_keys: false,
+	enable_experimental: false,
+	remote: true,
+	keys: []
+};
+
 
 function createJavascript(settings)
 {
-    if(settings['remote']) 
-    {
-        //console.log('Using remote Readability.');
+	var js_url, css_url, print_url;
 
-        js_url = "http://lab.arc90.com/experiments/readability/js/readability.js?x="+(Math.random());
-        css_url = "http://lab.arc90.com/experiments/readability/css/readability.css";
-        print_url = "http://lab.arc90.com/experiments/readability/css/readability-print.css";
-    } else
-    {
-      if(settings.enable_experimental)
+    if (settings.remote && !settings.enable_experimental) {
+		var arc90 = "http://lab.arc90.com/experiments/readability/";
+        js_url = arc90 + "js/readability.js?x="+(Math.random());
+        css_url = arc90 + "/css/readability.css";
+        print_url = arc90 + "/css/readability-print.css";
+    } else {
+      if (settings.enable_experimental)
       {
-          //console.log('Using local, experimental Readability.');
-          var js_url = chrome.extension.getURL('readability/readability-x.js');
-      } else
-      {
-          //console.log('Using local Readability.');
-          var js_url = chrome.extension.getURL('readability/readability.js');
+          js_url = chrome.extension.getURL('readability/readability-x.js');
+      } else {
+          js_url = chrome.extension.getURL('readability/readability.js');
       }
 
-      var css_url = chrome.extension.getURL('readability/readability.css');
-      var print_url = chrome.extension.getURL('readability/readability-print.css');
+      css_url = chrome.extension.getURL('readability/readability.css');
+      print_url = chrome.extension.getURL('readability/readability-print.css');
     }
 
-    var code = "(function(){readConvertLinksToFootnotes=" + settings['enable_links'] + ";readStyle='" + settings['style'] + "';readSize='" + settings['size'] + "';readMargin='" + settings['margin'] + "';_readability_script=document.createElement('SCRIPT');_readability_script.type='text/javascript';_readability_script.src='" + js_url + "';document.getElementsByTagName('head')[0].appendChild(_readability_script);_readability_css=document.createElement('LINK');_readability_css.rel='stylesheet';_readability_css.href='" + css_url + "';_readability_css.type='text/css';_readability_css.media='screen';document.getElementsByTagName('head')[0].appendChild(_readability_css);_readability_print_css=document.createElement('LINK');_readability_print_css.rel='stylesheet';_readability_print_css.href='" + print_url + "';_readability_print_css.media='print';_readability_print_css.type='text/css';document.getElementsByTagName('head')[0].appendChild(_readability_print_css);})();";
+    var code = "(function(){readConvertLinksToFootnotes=" + settings['enable_footnotes'] + ";readStyle='" + settings['style'] + "';readSize='" + settings['size'] + "';readMargin='" + settings['margin'] + "';_readability_script=document.createElement('SCRIPT');_readability_script.type='text/javascript';_readability_script.src='" + js_url + "';document.getElementsByTagName('head')[0].appendChild(_readability_script);_readability_css=document.createElement('LINK');_readability_css.rel='stylesheet';_readability_css.href='" + css_url + "';_readability_css.type='text/css';_readability_css.media='screen';document.getElementsByTagName('head')[0].appendChild(_readability_css);_readability_print_css=document.createElement('LINK');_readability_print_css.rel='stylesheet';_readability_print_css.href='" + print_url + "';_readability_print_css.media='print';_readability_print_css.type='text/css';document.getElementsByTagName('head')[0].appendChild(_readability_print_css);})();";
 
     return code;
 }
 
 function render(tab_id)
 {
-    var settings = getSettings();
-    //console.log(settings);
-
     chrome.tabs.sendRequest(tab_id, {'type': 'render'});
 }
 
 function getSettings()
 {
-    function parse(x)
-    {
-      try
-      {
-        return JSON.parse(x);
-      } catch(e)
-      {
-        return undefined;
-      }
-    }
+	var settings = {};
+	for (var opt in default_settings) {
+		settings[opt] = default_settings[opt];
+		if (!_.isUndefined(localStorage[opt])) {
+			settings[opt] = JSON.parse(localStorage[opt]);
+		}
+	}
 
-    var settings = {
-        style: localStorage['style'],
-        size: localStorage['size'],
-        margin: localStorage['margin'],
-        enable_links: !!parse(localStorage['enable_links']),
-        enable_experimental: !!parse(localStorage['enable_experimental']),
-        enable_keys: !!parse(localStorage['enable_keys']),
-        keys: parse(localStorage['keys'])
-    };
-
-    if(!_.isArray(settings['keys']))
-        settings['keys'] = [];
-
-    var defaults = {
-        style: 'style-newspaper',
-        size: 'size-large',
-        margin: 'margin-wide',
-        enable_links: false,
-        enable_keys: false,
-        enable_experimental: false,
-        keys: []
-    };
-
-    return _.extend(defaults, settings);
+    return settings;
 }
 
 function setSettings(settings)
 {
-    var keys = _.keys(settings);
-
-    if(_.include(keys, 'style'))
-        settings['style'] = settings['style']
-
-    if(_.include(keys, 'size'))
-        settings['size'] = settings['size']
-
-    if(_.include(keys, 'margin'))
-        settings['margin'] = settings['margin']
-
-    if(_.include(_.keys(settings), 'enable_links'))
-        settings['enable_links'] = JSON.stringify(!!settings['enable_links']);
-
-    if(_.include(_.keys(settings), 'enable_experimental'))
-        settings['enable_experimental'] = JSON.stringify(!!settings['enable_experimental']);
-
-    if(_.include(_.keys(settings), 'enable_keys'))
-        settings['enable_keys'] = JSON.stringify(!!settings['enable_keys']);
-
-    if(_.include(_.keys(settings), 'keys'))
-        settings['keys'] = JSON.stringify(settings['keys']);
-
-    //console.log('setSettings', settings);
-
-    _.extend(localStorage, settings);
+//	console.log('setSettings called with ' + JSON.stringify(settings));
+	for (var opt in default_settings) {
+		if (_.isUndefined(settings[opt]) || settings[opt] === '') {
+			continue;
+		}
+		if (typeof(default_settings[opt]) == 'boolean' &&
+				typeof(settings[opt]) != 'boolean') {
+			settings[opt] = settings[opt] == 'true';
+		}
+		localStorage[opt] = JSON.stringify(settings[opt]);
+	}
+//	console.log('Settings now: ' + JSON.stringify(localStorage));
 
     chrome.windows.getAll({'populate': true}, function(windows)
     {
@@ -119,27 +83,28 @@ function setSettings(settings)
 
 function requestHandler(data, sender, callback)
 {
-    if(data['type'] == 'javascript')
-    {
-        if(_.include(_.keys(data), 'settings'))
-            callback(createJavascript(data['settings']));
+	var result = undefined;
+
+    if (data['type'] == 'javascript') {
+        if (_.include(_.keys(data), 'settings'))
+            result = createJavascript(data['settings']);
         else
-            callback(createJavascript(getSettings()));
+            result = createJavascript(getSettings());
     }
-    if(data['type'] == 'setSettings')
-    {
+
+    if (data['type'] == 'setSettings') {
         setSettings(data['settings']);
-        callback();
     }
-    if(data['type'] == 'getSettings')
-    {
-        callback(getSettings());
+
+    if (data['type'] == 'getSettings') {
+        result = getSettings();
     }
-    if(data['type'] == 'render')
-    {
+
+    if (data['type'] == 'render') {
         render(data['tab_id']);
-        callback();
     }
+
+	callback(result);
 }
 
 chrome.extension.onRequest.addListener(requestHandler);
@@ -149,13 +114,4 @@ chrome.browserAction.onClicked.addListener(function(tab)
 {
     render(tab.id);
 });
-
-/*chrome.contextMenus.create({
-    'title': 'Readability',
-    'contexts': ['page', 'selection'],
-    'onclick': function(selection, tab)
-    {
-        render(tab.id);
-    }
-});*/
 

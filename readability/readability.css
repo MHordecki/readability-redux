@@ -85,3 +85,11 @@ a.rdbTK-powered span{display:inline-block;height:22px;margin-left:2px;background
 #kindle-container,#email-container{position:fixed;top:60px;left:50%;width:500px;height:490px;border:solid 3px #666;background-color:#fff;z-index:100!important;overflow:hidden;margin:0 0 0 -240px;padding:0;}
 /* Override html styling attributes */
 table,tr,td{background-color:transparent!important;}
+
+/* We know we installed readability; hide it from the article */
+#readability-logo, #arc90-logo, #readability-url,
+	#rdb-footer-right a.footer-twitterLink {
+  display: none;
+}
+
+

@@ -3,8 +3,10 @@ var settings = {
 
     init: function()
     {
-        $('select').change(_.bind(function() { this.preview(); this.markDirty(); }, this)); 
-        $('input').change(_.bind(this.markDirty, this)); 
+        $('select, input').change(_.bind(function() {
+			this.preview();
+			this.markDirty();
+		}, this));
 
         $('#cancel').click(_.bind(this.load, this));
         $('#save').click(_.bind(this.save, this));
@@ -41,14 +43,15 @@ var settings = {
             style: this.getSelect('r_style'),
             size: this.getSelect('r_size'),
             margin: this.getSelect('r_margin'),
-            enable_links: $('#enable_links').attr('checked'),
+            enable_footnotes: $('#enable_footnotes').attr('checked'),
             enable_experimental: $('#enable_experimental').attr('checked'),
             enable_keys: $('#enable_keys').attr('checked'),
+            remote: $('#remote').attr('checked'),
             keys: keybox.keys
         };
 
         //console.log(settings);
-        
+
         chrome.extension.sendRequest(
             {'type': 'setSettings', 'settings': settings},
             _.bind(this.markClean, this));
@@ -61,15 +64,18 @@ var settings = {
             this.setSelect('r_style', settings['style']);
             this.setSelect('r_size', settings['size']);
             this.setSelect('r_margin', settings['margin']);
-            $('#enable_links').attr('checked', settings['enable_links']);
-            
+            $('#enable_footnotes').attr('checked', settings['enable_footnotes']);
+
             keybox.keys = settings['keys'];
             if(settings['enable_keys'])
                 keybox.enable();
             else
                 keybox.disable();
 
-              $('#enable_experimental').attr('checked', settings['enable_experimental']);
+			$('#enable_experimental').attr('checked',
+				settings['enable_experimental']);
+
+			$('#remote').attr('checked', settings['remote']);
 
             keybox.update();
             this.preview()
@@ -77,8 +83,9 @@ var settings = {
         }, this));
     },
 
-    /* This is a bit wicked, but doing plain simple 
+    /* This is a bit wicked, but doing plain simple
      * location = 'javascript:...' resulted in blank iframe.
+     * (this is used in redux/example.html for the preview)
      */
     hello_from_child: function(preview_window)
     {
@@ -93,7 +100,9 @@ var settings = {
         var settings = {
             style: this.getSelect('r_style'),
             size: this.getSelect('r_size'),
-            margin: this.getSelect('r_margin')
+            margin: this.getSelect('r_margin'),
+            enable_footnotes: $('#enable_footnotes').attr('checked'),
+            remote: $('#remote').attr('checked')
         };
 
         chrome.extension.sendRequest({'type': 'javascript', 'settings': settings}, _.bind(function(js)
@@ -102,7 +111,6 @@ var settings = {
             {
                 this.preview_window.inject(js);
             }
-            else console.log('ZOMG! Preview window IS NULL!');
         }, this));
     }
 };
