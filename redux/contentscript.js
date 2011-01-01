@@ -92,13 +92,19 @@ var listener = {
 
 function render()
 {
-    chrome.extension.sendRequest({'type': 'javascript'}, function(response)
-    {
-        var script = document.createElement('script');
-        script.appendChild(document.createTextNode(response));
-        console.log(document.getElementsByTagName('head'));
-        document.getElementsByTagName('head')[0].appendChild(script);
-    });
+	var head = document.getElementsByTagName('head')[0];
+	if (head.readability_redux) {
+		window.location.reload();
+	} else {
+		chrome.extension.sendRequest({'type': 'javascript'}, 
+			function(response) {
+				var script = document.createElement('script');
+				script.appendChild(document.createTextNode(response));
+				head.readability_redux = true;
+				head.appendChild(script);
+			}
+		);
+	}
 }
 
 chrome.extension.onRequest.addListener(function(data, sender, callback)
