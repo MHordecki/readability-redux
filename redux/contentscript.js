@@ -85,7 +85,7 @@ var listener = {
         this.enabled = settings["enable_keys"];
         this.goal = settings["keys"];
         this.current_state = [];
-        console.log(settings);
+        //console.log(settings);
     }
 
 };

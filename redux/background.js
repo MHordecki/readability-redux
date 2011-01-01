@@ -3,7 +3,7 @@ function createJavascript(settings)
 {
     if(settings['remote']) 
     {
-        console.log('Using remote Readability.');
+        //console.log('Using remote Readability.');
 
         js_url = "http://lab.arc90.com/experiments/readability/js/readability.js?x="+(Math.random());
         css_url = "http://lab.arc90.com/experiments/readability/css/readability.css";
@@ -12,11 +12,11 @@ function createJavascript(settings)
     {
       if(settings.enable_experimental)
       {
-          console.log('Using local, experimental Readability.');
+          //console.log('Using local, experimental Readability.');
           var js_url = chrome.extension.getURL('readability/readability-x.js');
       } else
       {
-          console.log('Using local Readability.');
+          //console.log('Using local Readability.');
           var js_url = chrome.extension.getURL('readability/readability.js');
       }
 
@@ -32,7 +32,7 @@ function createJavascript(settings)
 function render(tab_id)
 {
     var settings = getSettings();
-    console.log(settings);
+    //console.log(settings);
 
     chrome.tabs.sendRequest(tab_id, {'type': 'render'});
 }
@@ -101,7 +101,7 @@ function setSettings(settings)
     if(_.include(_.keys(settings), 'keys'))
         settings['keys'] = JSON.stringify(settings['keys']);
 
-    console.log('setSettings', settings);
+    //console.log('setSettings', settings);
 
     _.extend(localStorage, settings);
 
