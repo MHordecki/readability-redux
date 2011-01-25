@@ -22,6 +22,9 @@ Sources here are for development purposes.
 Changelog
 ----------
 
+1.3.2 (2011.01.25)
+    + New icon set by Pete Fairhurst.
+
 1.3.1 (2010.08.15)
     + As context menu functionality isn't supported in stable Google Chrome, I had to remove it.
     + Minor bugfix.
@@ -71,5 +74,6 @@ Acknowledgements
 ----------------
 
   + Ilsi 50Mhz - for applying Readability to a selection. 
-  + Ed Marshall (logic) - for updating RR to Readability 1.7.1 (RR 1.2.1)
+  + Ed Marshall (logic) - for updating RR to Readability 1.7.1 (RR 1.2.1).
+  + Pete Fairhurst - for the new icon set.
 

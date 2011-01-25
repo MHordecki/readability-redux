@@ -1,10 +1,14 @@
 {
     "name": "Readability Redux",
-    "version": "1.3.1",
+    "version": "1.3.2",
     "description": "Readability for Chrome. Now fully customizable!",
     "background_page": "redux/background.html",
-    "browser_action": { "default_icon": "icon.png" },
-    "icons": { "128": "icon.png" },
+    "browser_action": { "default_icon": "icons/readability-toolbar.png" },
+    "icons": {
+      "16": "icons/readability-16.png",
+      "48": "icons/readability-48.png",
+      "128": "icons/readability-128.png"
+    },
     "permissions": [ "tabs", "http://*/*", "https://*/*"],
     "options_page": "redux/options.html",
     "content_scripts": [ { "matches": ["http://*/*", "https://*/*", "ftp://*/*", "file://*/*"], "js": ["redux/contentscript.js"] } ]
