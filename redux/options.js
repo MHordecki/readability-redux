@@ -47,7 +47,7 @@ var settings = {
             keys: keybox.keys
         };
 
-        console.log(settings);
+        //console.log(settings);
         
         chrome.extension.sendRequest(
             {'type': 'setSettings', 'settings': settings},
