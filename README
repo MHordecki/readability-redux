@@ -22,6 +22,11 @@ Sources here are for development purposes.
 Changelog
 ----------
 
+1.3.3 (2011.12.25)
+    + Updated to Readability r164
+    + Removed needless console comments
+    + Analytics
+
 1.3.2 (2011.01.25)
     + New icon set by Pete Fairhurst.
 
