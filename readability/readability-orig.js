@@ -1,9 +1,9 @@
 /*jslint undef: true, nomen: true, eqeqeq: true, plusplus: true, newcap: true, immed: true, browser: true, devel: true, passfail: false */
 /*global window: false, readConvertLinksToFootnotes: false, readStyle: false, readSize: false, readMargin: false, Typekit: false, ActiveXObject: false */
 
-var dbg = /*(typeof console !== 'undefined') ? function(s) {
+var dbg = (typeof console !== 'undefined') ? function(s) {
     console.log("Readability: " + s);
-} :*/ function() {};
+} : function() {};
 
 /*
  * Readability. An Arc90 Lab Experiment. 
