@@ -54,9 +54,10 @@ function getSettings()
         style: localStorage['style'],
         size: localStorage['size'],
         margin: localStorage['margin'],
-        enable_links: !!parse(localStorage['enable_links']),
-        enable_experimental: !!parse(localStorage['enable_experimental']),
-        enable_keys: !!parse(localStorage['enable_keys']),
+        enable_links: parse(localStorage['enable_links']),
+        enable_experimental: parse(localStorage['enable_experimental']),
+        show_article_tools: parse(localStorage['show_article_tools']),
+        enable_keys: parse(localStorage['enable_keys']),
         keys: parse(localStorage['keys'])
     };
 
@@ -70,10 +71,11 @@ function getSettings()
         enable_links: false,
         enable_keys: false,
         enable_experimental: false,
+        show_article_tools: true,
         keys: []
     };
 
-    return _.extend(defaults, settings);
+    return _.extend(settings, defaults);
 }
 
 function setSettings(settings)
@@ -94,6 +96,9 @@ function setSettings(settings)
 
     if(_.include(_.keys(settings), 'enable_experimental'))
         settings['enable_experimental'] = JSON.stringify(!!settings['enable_experimental']);
+
+    if(_.include(_.keys(settings), 'show_article_tools'))
+        settings['show_article_tools'] = JSON.stringify(!!settings['show_article_tools']);
 
     if(_.include(_.keys(settings), 'enable_keys'))
         settings['enable_keys'] = JSON.stringify(!!settings['enable_keys']);

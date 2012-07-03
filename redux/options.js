@@ -43,6 +43,7 @@ var settings = {
             margin: this.getSelect('r_margin'),
             enable_links: $('#enable_links').attr('checked'),
             enable_experimental: $('#enable_experimental').attr('checked'),
+            show_article_tools: $('#show_article_tools').attr('checked'),
             enable_keys: $('#enable_keys').attr('checked'),
             keys: keybox.keys
         };
@@ -69,7 +70,8 @@ var settings = {
             else
                 keybox.disable();
 
-              $('#enable_experimental').attr('checked', settings['enable_experimental']);
+            $('#enable_experimental').attr('checked', settings['enable_experimental']);
+            $('#show_article_tools').attr('checked', settings['show_article_tools']);
 
             keybox.update();
             this.preview()
