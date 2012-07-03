@@ -1,5 +1,5 @@
 /*jslint undef: true, nomen: true, eqeqeq: true, plusplus: true, newcap: true, immed: true, browser: true, devel: true, passfail: false */
-/*global window: false, readConvertLinksToFootnotes: false, readStyle: false, readSize: false, readMargin: false, Typekit: false, ActiveXObject: false */
+/*global window: false, showArticleTools: true, readConvertLinksToFootnotes: false, readStyle: false, readSize: false, readMargin: false, Typekit: false, ActiveXObject: false */
 
 var dbg = /*(typeof console !== 'undefined') ? function(s) {
     console.log("Readability: " + s);
@@ -134,8 +134,10 @@ var readability = {
         innerDiv.appendChild( articleTitle   );
         innerDiv.appendChild( articleContent );
         innerDiv.appendChild( articleFooter  );
-         overlay.appendChild( articleTools   );
-         overlay.appendChild( innerDiv       );
+        if (showArticleTools === true) {
+          overlay.appendChild( articleTools   );
+        }
+        overlay.appendChild( innerDiv       );
 
         /* Clear the old HTML, insert the new content. */
         document.body.innerHTML = "";
