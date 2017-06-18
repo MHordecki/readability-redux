@@ -1,36 +1,30 @@
 
-function cmp_arrays(a, b)
-{
-    if(a.length != b.length)
+function cmp_arrays (a, b) {
+    if (a.length != b.length) {
         return false;
+    }
 
-    for(var i = 0; i < a.length; i++)
-    {
-        if(a[i] != b[i])
+    for (var i = 0; i < a.length; i++) {
+        if (a[i] != b[i]) {
             return false;
+        }
     }
 
     return true;
 }
 
-function remove(a, el)
-{
-    for(var i = 0; i < a.length; i++)
-    {
-        if(a[i] == el)
-        {
+function remove (a, el) {
+    for (var i = 0; i < a.length; i++) {
+        if (a[i] == el) {
             a.splice(i, 1);
             return;
         }
     }
 }
 
-function contains(a, el)
-{
-    for(var i = 0; i < a.length; i++)
-    {
-        if(a[i] == el)
-        {
+function contains (a, el) {
+    for (var i = 0; i < a.length; i++) {
+        if (a[i] == el) {
             return true;
         }
     }
@@ -43,21 +37,23 @@ var listener = {
     goal: [17, 88],
     current_state: [],
 
-    onkeydown: function(e)
-    {
-        if(!this.enabled) return false;
-
-        if(!((e.which >= 65 && e.which <= 90) || e.which == 16 || e.which == 17 || e.which == 18))
+    onkeydown: function (e) {
+        if (!this.enabled) {
             return false;
+        }
 
-        if(contains(this.current_state, e.which))
+        if (!((e.which >= 65 && e.which <= 90) || e.which == 16 || e.which == 17 || e.which == 18)) {
             return false;
+        }
+
+        if (contains(this.current_state, e.which)) {
+            return false;
+        }
 
         this.current_state.push(e.which);
         this.current_state.sort();
 
-        if(cmp_arrays(this.goal, this.current_state))
-        {
+        if (cmp_arrays(this.goal, this.current_state)) {
             this.current_state = [];
             render();
         }
@@ -67,12 +63,14 @@ var listener = {
         return false;
     },
 
-    onkeyup: function(e)
-    {
-        if(!this.enabled) return false;
-
-        if(!((e.which >= 65 && e.which <= 90) || e.which == 16 || e.which == 17 || e.which == 18))
+    onkeyup: function (e) {
+        if (!this.enabled) {
             return false;
+        }
+
+        if (!((e.which >= 65 && e.which <= 90) || e.which == 16 || e.which == 17 || e.which == 18)) {
+            return false;
+        }
 
         remove(this.current_state, e.which);
         //console.log('keyup ' + e.which + ' => ' + this.current_state.toString());
@@ -80,8 +78,7 @@ var listener = {
         return false;
     },
 
-    setSettings: function(settings)
-    {
+    setSettings: function (settings) {
         this.enabled = settings["enable_keys"];
         this.goal = settings["keys"];
         this.current_state = [];
@@ -90,10 +87,8 @@ var listener = {
 
 };
 
-function render()
-{
-    chrome.extension.sendRequest({'type': 'javascript'}, function(response)
-    {
+function render () {
+    chrome.extension.sendRequest({'type': 'javascript'}, function (response) {
         var script = document.createElement('script');
         script.appendChild(document.createTextNode(response));
         //console.log(document.getElementsByTagName('head'));
@@ -101,20 +96,19 @@ function render()
     });
 }
 
-chrome.extension.onRequest.addListener(function(data, sender, callback)
-{
-    if(data['type'] === "render")
-    {
+chrome.extension.onRequest.addListener(function (data, sender, callback) {
+    if (data['type'] === "render") {
         render();
-    } else
-    if(data['type'] == 'newSettings')
-    {
+    } else if (data['type'] == 'newSettings') {
         listener.setSettings(data['settings']);
     }
 });
 
-chrome.extension.sendRequest({'type': 'getSettings'}, function(r) { listener.setSettings(r); });
+chrome.extension.sendRequest({'type': 'getSettings'}, function (r) {
+    listener.setSettings(r);
+});
 
-document.body.addEventListener('keydown', function(e) {listener.onkeydown(e);}, false);
-document.body.addEventListener('keyup', function(e) {listener.onkeyup(e);}, false);
-
+document.addEventListener("DOMContentLoaded", () => {
+    document.body.addEventListener('keydown', e => listener.onkeydown(e), false);
+    document.body.addEventListener('keyup', e => listener.onkeyup(e), false);
+});
