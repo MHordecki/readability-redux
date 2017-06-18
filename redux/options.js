@@ -17,7 +17,7 @@ var settings = {
         this.load();
     },
 
-    getChecked: (name) => !!document.querySelector(`#${name}`).hasAttribute('checked'),
+    getChecked: (name) => document.querySelector(`#${name}`).checked,
 
     setChecked: (name, checked) => {
         const elem = document.querySelector(`#${name}`);
@@ -81,9 +81,7 @@ var settings = {
             }
 
             this.setChecked('enable_experimental', settings['enable_experimental']);
-            // $('#enable_experimental').attr('checked', settings['enable_experimental']);
             this.setChecked('show_article_tools', settings['show_article_tools']);
-            // $('#show_article_tools').attr('checked', settings['show_article_tools']);
 
             keybox.update();
             this.preview()
@@ -132,30 +130,21 @@ var keybox = {
         keys.onfocus = this.focus.bind(this);
         keys.onblur = this.blur.bind(this);
         document.querySelector('#enable_keys').onchange = this.checkbox.bind(this);
-        // $('#keys').keydown(_.bind(this.keydown, this));
-        // $('#keys').keyup(_.bind(this.keyup, this));
-        // $('#keys').focus(_.bind(this.focus, this));
-        // $('#keys').blur(_.bind(this.blur, this));
-        // $('#enable_keys').change(_.bind(this.checkbox, this));
     },
 
     enable: function () {
         settings.setChecked('enable_keys', true);
-        // $('#enable_keys').attr('checked', 'checked');
         const keys_elem = document.querySelector('#keys');
         keys_elem.removeAttribute('style');
-        // $('#keys').css('background-color', '');
-        // $('#keys').css('color', '');
+        keys_elem.removeAttribute('readonly');
         this.enabled = 1;
     },
 
     disable: function () {
         settings.setChecked('enable_keys', false);
-        // $('#enable_keys').attr('checked', '');
         const keys_elem = document.querySelector('#keys');
         keys_elem.setAttribute('style', 'background-color: silver; color: gray;');
-        // $('#keys').css('background-color', 'silver');
-        // $('#keys').css('color', 'gray');
+        keys_elem.setAttribute('readonly', 'true');
         this.enabled = 0;
     },
 
@@ -169,17 +158,20 @@ var keybox = {
 
     // It sometimes fails, like when Ctrl+Shift+U, U has a strange key code 229. Dunno why.
     keydown: function (e) {
-        if (!this.enabled)
+        if (!this.enabled) {
             return;
+        }
 
-        if (!((e.which >= 65 && e.which <= 90) || e.which == 16 || e.which == 17 || e.which == 18))
+        if (!((e.which >= 65 && e.which <= 90) || e.which == 16 || e.which == 17 || e.which == 18)) {
             return false;
+        }
 
-        if (this.pressed == 0)
+        if (this.pressed == 0) {
             this.keys = [];
+        }
 
-        if (_.include(this.keys, e.which)) // Degenerate situation
-        {
+        // Degenerate situation
+        if (this.keys.indexOf(e.which) >= 0) {
             this.keys = [];
             this.pressed = 0;
         }
