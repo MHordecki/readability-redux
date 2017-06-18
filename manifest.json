@@ -1,15 +1,41 @@
 {
-    "name": "Readability Redux",
-    "version": "1.3.4",
-    "description": "Readability for Chrome. Now fully customizable!",
-    "background_page": "redux/background.html",
-    "browser_action": { "default_icon": "icons/readability-toolbar.png" },
-    "icons": {
-      "16": "icons/readability-16.png",
-      "48": "icons/readability-48.png",
-      "128": "icons/readability-128.png"
+    "background": {
+        "page": "redux/background.html"
     },
-    "permissions": [ "tabs", "http://*/*", "https://*/*"],
+    "browser_action": {
+        "default_icon": "icons/readability-toolbar.png"
+    },
+    "content_scripts": [
+        {
+            "js": [
+                "redux/contentscript.js"
+            ],
+            "matches": [
+                "http://*/*",
+                "https://*/*",
+                "ftp://*/*",
+                "file://*/*"
+            ]
+        }
+    ],
+    "description": "Readability for Chrome. Now fully customizable!",
+    "icons": {
+        "128": "icons/readability-128.png",
+        "16": "icons/readability-16.png",
+        "48": "icons/readability-48.png"
+    },
+    "manifest_version": 2,
+    "name": "Readability Redux",
     "options_page": "redux/options.html",
-    "content_scripts": [ { "matches": ["http://*/*", "https://*/*", "ftp://*/*", "file://*/*"], "js": ["redux/contentscript.js"] } ]
+    "permissions": [
+        "tabs",
+        "http://*/*",
+        "https://*/*"
+    ],
+    "version": "1.3.4",
+    "web_accessible_resources": [
+        "/readability/readability.js",
+        "/readability/readability.css",
+        "/readability/readability-print.css"
+    ]
 }

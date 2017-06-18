@@ -3,10 +3,8 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <title>Readability Redux</title>
         <link rel="stylesheet" type="text/css" href="options.css"/>
-        <script type="text/javascript" src="jquery-1.4.2.js"></script>
-        <script type="text/javascript" src="underscore-0.6.js"></script>
         <script type="text/javascript" src="options.js"></script>
-</head>
+    </head>
 <body>
 
 <div id="header"><h1>Readability Redux</h1></div>
@@ -45,12 +43,12 @@
 </p>
 
 <p>
-<input type="checkbox" id="enable_links" />
+<input type="checkbox" id="enable_links" name="enable_links" />
 <label for="enable_links">Convert links to footnotes(<a href="http://blog.arc90.com/2010/06/03/readability-updated-an-end-to-the-yank-of-the-hyperlink/">more</a>).</label>
 </p>
 
 <p>
-<input type="checkbox" id="enable_keys" />
+<input type="checkbox" id="enable_keys" name="enable_keys" />
 <label for="keys">Keyboard shortcut (click on the box and press the intended keystroke) :</label>
 <input id="keys" readonly="true" />
 </p>
@@ -58,6 +56,11 @@
 <p>
 <input type="checkbox" id="enable_experimental" name="enable_experimental" />
 <label for="enable_experimental">Apply Readability only to selected fragment (experimental).</label>
+</p>
+
+<p>
+<input type="checkbox" id="show_article_tools" name="show_article_tools" />
+<label for="show_article_tools">Show article tools.</label>
 </p>
 
 <p>
