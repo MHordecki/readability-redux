@@ -49,8 +49,8 @@ a.rdbTK-powered span{display:inline-block;height:22px;margin-left:2px;background
 .size-x-small h1,.size-small h1,.size-medium h1,.size-large h1{font-size:1.6em;line-height:1.5em;}
 .size-x-large h1{font-size:1.6em;line-height:1.3em;}
 /* Style */
-.style-newspaper {font-family:Georgia,"Times New Roman", Times, serif;background:#fbfbfb;color:#080000;}
-.style-newspaper h1 {text-transform:capitalize;font-family:Georgia, "Times New Roman", Times, serif;}
+.style-newspaper {font-family:Baskerville, "Baskerville Old Face", "Hoefler Text", georgia, Garamond, times, serif;background:#fff;color:#000;}
+.style-newspaper h1 {text-transform:capitalize;font-family:Baskerville, "Baskerville Old Face", "Hoefler Text", georgia, Garamond, times, serif;}
 .style-newspaper #readInner a {color:#0924e1;}
 .style-novel {font-family:"Palatino Linotype", "Book Antiqua", Palatino, serif;background:#f4eed9;color:#1d1916;}
 .style-novel #readInner a {color:#1856ba;}
